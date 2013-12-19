@@ -32,7 +32,19 @@ module Glam
 
       glam = Glam::Glamorizer.new(@options)
 
-      puts glam.glamorize(ARGV[0] ? File.read(ARGV[0]) : STDIN.read)
+      html = if ARGV[0]
+        file = File.expand_path(ARGV[0])
+        if File.exists?(file)
+          File.read(file)
+        else
+          $stderr.puts "#{file} does not exist"
+          exit 2
+        end
+      else
+        STDIN.read
+      end
+
+      puts glam.glamorize(html)
     end
   end
 end

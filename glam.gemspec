@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "glam"
-  spec.version       = "0.0.1"
+  spec.version       = "0.1.0"
   spec.authors       = ["Paul Barry"]
   spec.email         = ["mail@paulbarry.com"]
   spec.description   = %q{An HTML pretty printer}
