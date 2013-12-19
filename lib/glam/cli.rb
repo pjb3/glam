@@ -16,16 +16,21 @@ module Glam
 
     def run
       @parser = OptionParser.new do |o|
-        o.on "-i", "--indent [INDENT]", Integer do |indent_size|
+        o.on "-i", "--indent [INDENT]", "How many spaces to indent at each level", Integer do |indent_size|
           @options[:indent_size] = indent_size
         end
       end
 
-      @parser.banner = "glam [options] file"
+      @parser.banner = "glam #{Glam::VERSION}\n\nUsage: glam [options] file"
 
       @parser.on_tail "-h", "--help", "Show help" do
         $stderr.puts @parser
         exit 1
+      end
+
+      @parser.on_tail "-v", "--version", "Print the version" do
+        $stderr.puts Glam::VERSION
+        exit 2
       end
 
       @parser.parse!
@@ -38,7 +43,7 @@ module Glam
           File.read(file)
         else
           $stderr.puts "#{file} does not exist"
-          exit 2
+          exit 3
         end
       else
         STDIN.read
