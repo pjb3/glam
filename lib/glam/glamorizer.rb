@@ -45,6 +45,8 @@ module Glam
             unless child_node.blank?
               result << "\n#{indent}#{child_node.content.strip}"
             end
+          elsif child_node.comment?
+            result << "\n#{indent}<!-- #{child_node.content.strip} -->"
           elsif VOID_ELEMENTS.include?(child_node.name)
             result << "\n#{indented_node_with_attributes(child_node)}"
           else
