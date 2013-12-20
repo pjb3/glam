@@ -1,7 +1,7 @@
 require 'glam/glamorizer'
 
 module Glam
-  VERSION = '0.1.0'
+  VERSION = '0.1.1'
 end
 
 # Pretty-print the HTML
