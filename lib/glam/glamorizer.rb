@@ -30,25 +30,34 @@ module Glam
         result = ''
         html
       else
-        result = "<!doctype html>\n"
+        result = "<!doctype html>"
         Nokogiri::HTML(html).root
       end
 
       result << indented_node_with_attributes(node)
-      self.current_indent += 1
-      node.children.each do |child_node|
-        if child_node.text?
-          unless child_node.blank?
-            result << "#{indent}#{child_node.content.strip}\n"
+      if node.children.size == 1 and node.children.first.text?
+        child_node = node.children.first
+        result << "#{child_node.content.strip}</#{node.name}>"
+      else
+        self.current_indent += 1
+        node.children.each do |child_node|
+          if child_node.text?
+            unless child_node.blank?
+              result << "\n#{indent}#{child_node.content.strip}"
+            end
+          elsif VOID_ELEMENTS.include?(child_node.name)
+            result << "\n#{indented_node_with_attributes(child_node)}"
+          else
+            result << glamorize(child_node)
           end
-        elsif VOID_ELEMENTS.include?(child_node.name)
-          result << indented_node_with_attributes(child_node)
+        end
+        self.current_indent -= 1
+        if current_indent < 1
+          result << "\n#{indent}</#{node.name}>\n"
         else
-          result << glamorize(child_node)
+          result << "\n#{indent}</#{node.name}>"
         end
       end
-      self.current_indent -= 1
-      result << "#{indent}</#{node.name}>\n"
     end
 
     private
@@ -57,7 +66,7 @@ module Glam
     end
 
     def indented_node_with_attributes(node)
-      "#{indent}<#{node.name}#{node.attributes.map{|n,v| %{ #{n}="#{v}"}}.join}>\n"
+      "\n#{indent}<#{node.name}#{node.attributes.map{|n,v| %{ #{n}="#{v}"}}.join}>"
     end
   end
 
